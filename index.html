@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Google Responsive</title>
+    <style>
+        .responsive-iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .responsive-iframe-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .timer {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            z-index: 1000;
+        }
+
+        @media screen and (max-width: 600px) {
+            .timer {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 18px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div align="center"><b><h1>Unidad Curricular Sistema Muscular</h1></b></div>
+    <div class="timer" id="timer">25:00</div>
+    <div class="responsive-iframe-container">
+        <iframe id="form-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSe4Q8Fc7gpAdpHI2M5RTGpRwBwgIndR9quyepGISBqD1vw5vA/viewform?embedded=true" allowfullscreen></iframe>
+    </div>
+
+    <<script>
+        let timerElement = document.getElementById('timer');
+        let iframeElement = document.getElementById('form-iframe');
+        let timeLeft = 25 * 60; // 25 minutos en segundos
+        let userActive = true; // Variable para indicar si el usuario está activo
+      
+        function updateTimer() {
+          let minutes = Math.floor(timeLeft / 60);
+          let seconds = timeLeft % 60;
+          seconds = seconds < 10 ? '0' + seconds : seconds;
+          timerElement.textContent = `${minutes}:${seconds}`;
+      
+          if (timeLeft > 0) {
+            timeLeft--;
+          } else {
+            if (userActive) {
+              alert('El tiempo ha terminado. Tiene un nuevo intento.');
+              iframeElement.src = iframeElement.src; // Recarga el iframe
+              timeLeft = 25 * 60; // Reinicia el tiempo
+            } else {
+              alert('El tiempo ha terminado. Su sesión ha sido bloqueada por inactividad. Espere 2 horas para un nuevo intento.');
+              // Bloquear el formulario (deshabilitar botones, etc.)
+              // Iniciar un temporizador de 2 horas
+              // Redireccionar a una página de espera o bloqueo después de 2 horas
+            }
+          }
+        }
+      
+        window.addEventListener('focus', () => {
+          userActive = true;
+        });
+      
+        window.addEventListener('blur', () => {
+          userActive = false;
+        });
+      
+        window.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            userActive = false;
+          } else {
+            userActive = true;
+          }
+        });
+      
+        // Detectar navegador (ejemplos)
+        if (/Chrome/.test(navigator.userAgent)) {
+          console.log('Usuario usando Chrome');
+        }
+      
+        if (/Firefox/.test(navigator.userAgent)) {
+          console.log('Usuario usando Firefox');
+        }
+      
+        // Detectar dispositivo móvil (ejemplo)
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+          console.log('Usuario usando dispositivo móvil');
+        }
+      
+        setInterval(updateTimer, 1000); // Actualiza cada segundo
+      </script>
+</body>
+</html>
